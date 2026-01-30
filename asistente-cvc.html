@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asistente CVC - Formulador de Propuestas Culturales</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap');
+        
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .card-shadow {
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .typing-indicator {
+            display: flex;
+            gap: 4px;
+        }
+
+        .typing-indicator span {
+            width: 8px;
+            height: 8px;
+            background: #667eea;
+            border-radius: 50%;
+            animation: bounce 1.4s infinite ease-in-out both;
+        }
+
+        .typing-indicator span:nth-child(1) { animation-delay: -0.32s; }
+        .typing-indicator span:nth-child(2) { animation-delay: -0.16s; }
+
+        @keyframes bounce {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .step-active {
+            background: #667eea;
+            color: white;
+        }
+
+        .step-completed {
+            background: #10b981;
+            color: white;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <header class="gradient-bg text-white py-8 shadow-lg">
+        <div class="container mx-auto px-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-4xl font-bold mb-2">Asistente CVC</h1>
+                    <p class="text-purple-100 text-lg">Tu aliado para postularte a estímulos culturales</p>
+                </div>
+                <div class="text-right">
+                    <div class="text-sm opacity-90">Impulsado por</div>
+                    <div class="text-2xl font-bold">Platohedro</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-6 py-12">
+        <!-- Progress Steps -->
+        <div id="progressSteps" class="flex justify-between mb-12 max-w-4xl mx-auto">
+            <div class="step-item flex-1 text-center">
+                <div id="step1" class="step-circle w-12 h-12 rounded-full mx-auto mb-2 flex items-center justify-center font-bold step-active">1</div>
+                <div class="text-sm font-semibold">Tu Organización</div>
+            </div>
+            <div class="flex-1 flex items-center justify-center">
+                <div class="h-1 bg-gray-300 flex-1"></div>
+            </div>
+            <div class="step-item flex-1 text-center">
+                <div id="step2" class="step-circle w-12 h-12 rounded-full bg-gray-300 mx-auto mb-2 flex items-center justify-center font-bold">2</div>
+                <div class="text-sm font-semibold">Tu Propuesta</div>
+            </div>
+            <div class="flex-1 flex items-center justify-center">
+                <div class="h-1 bg-gray-300 flex-1"></div>
+            </div>
+            <div class="step-item flex-1 text-center">
+                <div id="step3" class="step-circle w-12 h-12 rounded-full bg-gray-300 mx-auto mb-2 flex items-center justify-center font-bold">3</div>
+                <div class="text-sm font-semibold">Generar</div>
+            </div>
+        </div>
+
+        <!-- Form Container -->
+        <div class="max-w-4xl mx-auto">
+            <!-- Paso 1: Tu Organización -->
+            <div id="paso1" class="bg-white rounded-2xl p-8 card-shadow fade-in">
+                <h2 class="text-3xl font-bold mb-6 text-gray-800">Cuéntanos sobre tu organización</h2>
+                
+                <div class="space-y-6">
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Nombre de tu organización *</label>
+                        <input type="text" id="nombreOrg" class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-purple-500 focus:outline-none transition" placeholder="Ej: Teatro Comunitario El Encuentro">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Tipo de organización *</label>
+                        <select id="tipoOrg" class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-purple-500 focus:outline-none transition">
+                            <option value="">Selecciona una opción</option>
+                            <option value="teatro">Teatro Comunitario</option>
+                            <option value="musica">Música y Sonidos</option>
+                            <option value="danza">Danza y Movimiento</option>
+                            <option value="artes-plasticas">Artes Plásticas y Visuales</option>
+                            <option value="audiovisual">Audiovisual y Cine</option>
+                            <option value="literatura">Literatura y Palabra</option>
+                            <option value="patrimonio">Patrimonio y Memoria</option>
+                            <option value="comunicacion">Comunicación Comunitaria</option>
+                            <option value="multidisciplinar">Multidisciplinar</option>
+                            <option value="otro">Otro</option>
+                        </select>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Departamento *</label>
+                            <input type="text" id="departamento" class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-purple-500 focus:outline-none transition" placeholder="Ej: Antioquia">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Municipio/Ciudad *</label>
+                            <input type="text" id="municipio" class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-purple-500 focus:outline-none transition" placeholder="Ej: Medellín">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Comuna o corregimiento (si aplica)</label>
+                        <input type="text" id="comuna" class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-purple-500 focus:outline-none transition" placeholder="Ej: Comuna 13, San Javier">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">¿Cuánto tiempo llevan trabajando? *</label>
+                        <select id="tiempo" class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-purple-500 focus:outline-none transition">
+                            <option value="">Selecciona una opción</option>
+                            <option value="menos-1">Menos de 1 año</option>
+                            <option value="1-2">1-2 años</option>
+                            <option value="3-5">3-5 años</option>
+                            <option value="6-10">6-10 años</option>
+                            <option value="mas-10">Más de 10 años</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Población con la que trabajan *</label>
+                        <textarea id="poblacion" class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-purple-500 focus:outline-none transition resize-none" rows="3" placeholder="Ej: Niños y jóvenes de 8 a 18 años, mujeres cabeza de familia, adultos mayores..."></textarea>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Breve descripción de su trabajo (2-3 frases)</label>
+                        <textarea id="descripcionOrg" class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-purple-500 focus:outline-none transition resize-none" rows="4" placeholder="Describe brevemente qué hace tu organización, cuál es su propósito y su impacto en la comunidad..."></textarea>
+                    </div>
+                </div>
+
+                <div class="mt-8 flex justify-end">
+                    <button onclick="irAPaso2()" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-8 rounded-lg transition transform hover:scale-105">
+                        Continuar →
+                    </button>
+                </div>
+            </div>
+
+            <!-- Paso 2: Tu Propuesta -->
+            <div id="paso2" class="bg-white rounded-2xl p-8 card-shadow hidden">
+                <h2 class="text-3xl font-bold mb-6 text-gray-800">Cuéntanos sobre tu propuesta</h2>
+                
+                <div class="space-y-6">
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">¿Para qué convocatoria es? *</label>
+                        <select id="tipoConvocatoria" class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-purple-500 focus:outline-none transition">
+                            <option value="">Selecciona una opción</option>
+                            <option value="estimulos-medellin">Estímulos para el Arte y la Cultura - Medellín</option>
+                            <option value="presupuesto-participativo">Presupuesto Participativo - Medellín</option>
+                            <option value="ibercultura">IberCultura Viva</option>
+                            <option value="ministerio">Ministerio de las Culturas</option>
+                            <option value="otra">Otra convocatoria</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Línea temática *</label>
+                        <select id="lineaTematica" class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-purple-500 focus:outline-none transition">
+                            <option value="">Selecciona una opción</option>
+                            <option value="creacion">Creación artística</option>
+                            <option value="circulacion">Circulación</option>
+                            <option value="formacion">Formación</option>
+                            <option value="investigacion">Investigación</option>
+                            <option value="infraestructura">Fortalecimiento organizacional</option>
+                            <option value="gobernanza">Gobernanza comunitaria</option>
+                            <option value="otras-economias">Otras economías</option>
+                            <option value="memoria">Memoria y patrimonio</option>
+                            <option value="tecnologia">Ciencia y tecnología</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Título de tu propuesta *</label>
+                        <input type="text" id="tituloPropuesta" class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-purple-500 focus:outline-none transition" placeholder="Ej: Tejiendo memoria: encuentros intergeneracionales a través del teatro">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">¿Qué problema o necesidad quieren abordar? *</label>
+                        <textarea id="problema" class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-purple-500 focus:outline-none transition resize-none" rows="4" placeholder="Describe la situación, problema o necesidad que motiva este proyecto..."></textarea>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">¿Qué quieren lograr con este proyecto? (Objetivo principal) *</label>
+                        <textarea id="objetivo" class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-purple-500 focus:outline-none transition resize-none" rows="3" placeholder="Describe el objetivo principal de tu proyecto..."></textarea>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">¿Cómo lo van a hacer? (Actividades principales) *</label>
+                        <textarea id="actividades" class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-purple-500 focus:outline-none transition resize-none" rows="5" placeholder="Describe las actividades principales que van a desarrollar..."></textarea>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Duración del proyecto</label>
+                            <input type="text" id="duracion" class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-purple-500 focus:outline-none transition" placeholder="Ej: 6 meses">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Personas beneficiadas (aprox.)</label>
+                            <input type="text" id="beneficiarios" class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-purple-500 focus:outline-none transition" placeholder="Ej: 150 personas">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Presupuesto solicitado (en pesos)</label>
+                        <input type="text" id="presupuesto" class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-purple-500 focus:outline-none transition" placeholder="Ej: $15.000.000">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">¿Algo más que quieras destacar? (Opcional)</label>
+                        <textarea id="adicional" class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-purple-500 focus:outline-none transition resize-none" rows="3" placeholder="Alianzas, experiencias previas, reconocimientos, etc."></textarea>
+                    </div>
+                </div>
+
+                <div class="mt-8 flex justify-between">
+                    <button onclick="volverAPaso1()" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-3 px-8 rounded-lg transition">
+                        ← Volver
+                    </button>
+                    <button onclick="irAPaso3()" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-8 rounded-lg transition transform hover:scale-105">
+                        Continuar →
+                    </button>
+                </div>
+            </div>
+
+            <!-- Paso 3: Generar Propuesta -->
+            <div id="paso3" class="bg-white rounded-2xl p-8 card-shadow hidden">
+                <h2 class="text-3xl font-bold mb-6 text-gray-800">¡Listo para generar tu propuesta!</h2>
+                
+                <div class="bg-purple-50 border-2 border-purple-200 rounded-lg p-6 mb-6">
+                    <h3 class="font-bold text-purple-900 mb-3">📋 Resumen de tu información:</h3>
+                    <div id="resumen" class="space-y-2 text-sm text-gray-700"></div>
+                </div>
+
+                <div class="mb-6">
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Formato de descarga</label>
+                    <select id="formatoDescarga" class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-purple-500 focus:outline-none transition">
+                        <option value="texto">Texto (para copiar/pegar)</option>
+                        <option value="word">Documento Word (.docx)</option>
+                        <option value="pdf">PDF</option>
+                    </select>
+                </div>
+
+                <div id="loading" class="hidden text-center py-8">
+                    <div class="typing-indicator justify-center mb-4">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                    <p class="text-gray-600">Generando tu propuesta con IA...</p>
+                    <p class="text-sm text-gray-500 mt-2">Esto puede tomar unos segundos</p>
+                </div>
+
+                <div id="resultado" class="hidden">
+                    <div class="bg-green-50 border-2 border-green-200 rounded-lg p-6 mb-6">
+                        <h3 class="font-bold text-green-900 mb-3 flex items-center">
+                            <span class="text-2xl mr-2">✅</span>
+                            ¡Tu propuesta está lista!
+                        </h3>
+                        <p class="text-green-800">Hemos generado un borrador basado en los principios de Cultura Viva Comunitaria. Recuerda revisarlo, personalizarlo y ajustarlo según las bases específicas de la convocatoria.</p>
+                    </div>
+
+                    <div class="bg-white border-2 border-gray-200 rounded-lg p-6 mb-6 max-h-96 overflow-y-auto">
+                        <div id="propuestaGenerada" class="prose max-w-none"></div>
+                    </div>
+
+                    <div class="flex gap-4">
+                        <button onclick="descargarPropuesta()" class="flex-1 bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg transition">
+                            📥 Descargar Propuesta
+                        </button>
+                        <button onclick="copiarTexto()" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition">
+                            📋 Copiar Texto
+                        </button>
+                    </div>
+                </div>
+
+                <div class="mt-8 flex justify-between">
+                    <button onclick="volverAPaso2()" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-3 px-8 rounded-lg transition">
+                        ← Volver
+                    </button>
+                    <button id="btnGenerar" onclick="generarPropuesta()" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-8 rounded-lg transition transform hover:scale-105">
+                        🪄 Generar Propuesta
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Info Box -->
+        <div class="max-w-4xl mx-auto mt-12 bg-blue-50 border-2 border-blue-200 rounded-2xl p-6">
+            <h3 class="font-bold text-blue-900 mb-3">💡 Consejos para una buena propuesta:</h3>
+            <ul class="space-y-2 text-blue-800 text-sm">
+                <li>✓ Sé específico sobre tu comunidad y el territorio</li>
+                <li>✓ Conecta tu proyecto con los principios de Cultura Viva Comunitaria</li>
+                <li>✓ Muestra el impacto transformador en la comunidad</li>
+                <li>✓ Incluye metodologías participativas</li>
+                <li>✓ Revisa bien las bases de la convocatoria antes de enviar</li>
+            </ul>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8 mt-16">
+        <div class="container mx-auto px-6 text-center">
+            <p class="mb-2">Asistente CVC - Una herramienta de <strong>Platohedro</strong></p>
+            <p class="text-sm text-gray-400">Impulsando la Cultura Viva Comunitaria con tecnología</p>
+        </div>
+    </footer>
+
+    <script>
+        // Datos del formulario
+        let datosFormulario = {};
+
+        function irAPaso2() {
+            // Validar paso 1
+            const campos = ['nombreOrg', 'tipoOrg', 'departamento', 'municipio', 'tiempo', 'poblacion'];
+            let valido = true;
+            
+            campos.forEach(campo => {
+                const elemento = document.getElementById(campo);
+                if (!elemento.value.trim()) {
+                    valido = false;
+                    elemento.classList.add('border-red-500');
+                } else {
+                    elemento.classList.remove('border-red-500');
+                    datosFormulario[campo] = elemento.value;
+                }
+            });
+
+            // Campos opcionales
+            datosFormulario.comuna = document.getElementById('comuna').value;
+            datosFormulario.descripcionOrg = document.getElementById('descripcionOrg').value;
+
+            if (!valido) {
+                alert('Por favor completa todos los campos obligatorios (marcados con *)');
+                return;
+            }
+
+            // Cambiar pasos
+            document.getElementById('paso1').classList.add('hidden');
+            document.getElementById('paso2').classList.remove('hidden');
+            document.getElementById('paso2').classList.add('fade-in');
+            
+            // Actualizar progress
+            document.getElementById('step1').classList.remove('step-active');
+            document.getElementById('step1').classList.add('step-completed');
+            document.getElementById('step2').classList.add('step-active');
+            
+            window.scrollTo(0, 0);
+        }
+
+        function volverAPaso1() {
+            document.getElementById('paso2').classList.add('hidden');
+            document.getElementById('paso1').classList.remove('hidden');
+            
+            document.getElementById('step2').classList.remove('step-active');
+            document.getElementById('step1').classList.remove('step-completed');
+            document.getElementById('step1').classList.add('step-active');
+            
+            window.scrollTo(0, 0);
+        }
+
+        function irAPaso3() {
+            // Validar paso 2
+            const campos = ['tipoConvocatoria', 'lineaTematica', 'tituloPropuesta', 'problema', 'objetivo', 'actividades'];
+            let valido = true;
+            
+            campos.forEach(campo => {
+                const elemento = document.getElementById(campo);
+                if (!elemento.value.trim()) {
+                    valido = false;
+                    elemento.classList.add('border-red-500');
+                } else {
+                    elemento.classList.remove('border-red-500');
+                    datosFormulario[campo] = elemento.value;
+                }
+            });
+
+            // Campos opcionales
+            datosFormulario.duracion = document.getElementById('duracion').value;
+            datosFormulario.beneficiarios = document.getElementById('beneficiarios').value;
+            datosFormulario.presupuesto = document.getElementById('presupuesto').value;
+            datosFormulario.adicional = document.getElementById('adicional').value;
+
+            if (!valido) {
+                alert('Por favor completa todos los campos obligatorios (marcados con *)');
+                return;
+            }
+
+            // Generar resumen
+            const resumen = `
+                <p><strong>Organización:</strong> ${datosFormulario.nombreOrg}</p>
+                <p><strong>Ubicación:</strong> ${datosFormulario.municipio}, ${datosFormulario.departamento}</p>
+                <p><strong>Propuesta:</strong> ${datosFormulario.tituloPropuesta}</p>
+                <p><strong>Línea:</strong> ${datosFormulario.lineaTematica}</p>
+                <p><strong>Convocatoria:</strong> ${datosFormulario.tipoConvocatoria}</p>
+            `;
+            document.getElementById('resumen').innerHTML = resumen;
+
+            // Cambiar pasos
+            document.getElementById('paso2').classList.add('hidden');
+            document.getElementById('paso3').classList.remove('hidden');
+            document.getElementById('paso3').classList.add('fade-in');
+            
+            // Actualizar progress
+            document.getElementById('step2').classList.remove('step-active');
+            document.getElementById('step2').classList.add('step-completed');
+            document.getElementById('step3').classList.add('step-active');
+            
+            window.scrollTo(0, 0);
+        }
+
+        function volverAPaso2() {
+            document.getElementById('paso3').classList.add('hidden');
+            document.getElementById('paso2').classList.remove('hidden');
+            
+            document.getElementById('step3').classList.remove('step-active');
+            document.getElementById('step2').classList.remove('step-completed');
+            document.getElementById('step2').classList.add('step-active');
+            
+            window.scrollTo(0, 0);
+        }
+
+        async function generarPropuesta() {
+            document.getElementById('btnGenerar').disabled = true;
+            document.getElementById('loading').classList.remove('hidden');
+            document.getElementById('resultado').classList.add('hidden');
+
+            // Construir el prompt para Claude
+            const prompt = `Eres un experto en Cultura Viva Comunitaria y ayudas a organizaciones comunitarias a formular propuestas para convocatorias públicas de estímulos culturales en Colombia.
+
+CONTEXTO DE CULTURA VIVA COMUNITARIA:
+- Movimiento de organizaciones comunitarias que promueven la transformación social a través del arte
+- Principios: participación, interculturalidad, diversidad, derechos culturales, buen vivir
+- Enfoque en gobernanza comunitaria, otras economías, construcción de paz
+- 315+ organizaciones en Colombia en 24 departamentos
+- Preparación para el VII Congreso Latinoamericano (abril 2026)
+
+DATOS DE LA ORGANIZACIÓN:
+- Nombre: ${datosFormulario.nombreOrg}
+- Tipo: ${datosFormulario.tipoOrg}
+- Ubicación: ${datosFormulario.municipio}, ${datosFormulario.departamento}${datosFormulario.comuna ? ', ' + datosFormulario.comuna : ''}
+- Trayectoria: ${datosFormulario.tiempo}
+- Población: ${datosFormulario.poblacion}
+${datosFormulario.descripcionOrg ? '- Descripción: ' + datosFormulario.descripcionOrg : ''}
+
+DATOS DE LA PROPUESTA:
+- Convocatoria: ${datosFormulario.tipoConvocatoria}
+- Línea temática: ${datosFormulario.lineaTematica}
+- Título: ${datosFormulario.tituloPropuesta}
+- Problema/necesidad: ${datosFormulario.problema}
+- Objetivo: ${datosFormulario.objetivo}
+- Actividades: ${datosFormulario.actividades}
+${datosFormulario.duracion ? '- Duración: ' + datosFormulario.duracion : ''}
+${datosFormulario.beneficiarios ? '- Beneficiarios: ' + datosFormulario.beneficiarios : ''}
+${datosFormulario.presupuesto ? '- Presupuesto: ' + datosFormulario.presupuesto : ''}
+${datosFormulario.adicional ? '- Información adicional: ' + datosFormulario.adicional : ''}
+
+TAREA:
+Genera un borrador de propuesta cultural profesional siguiendo esta estructura:
+
+1. TÍTULO DEL PROYECTO
+
+2. PRESENTACIÓN DE LA ORGANIZACIÓN (1 párrafo)
+- Quiénes somos y qué hacemos
+- Nuestra trayectoria y comunidad
+
+3. JUSTIFICACIÓN (2-3 párrafos)
+- Contexto del problema/necesidad
+- Por qué es importante abordarlo
+- Conexión con Cultura Viva Comunitaria
+
+4. OBJETIVO GENERAL (1 párrafo claro y medible)
+
+5. OBJETIVOS ESPECÍFICOS (3-4 objetivos SMART)
+
+6. METODOLOGÍA (2-3 párrafos)
+- Enfoque participativo y comunitario
+- Actividades principales paso a paso
+- Cómo se involucra la comunidad
+
+7. POBLACIÓN BENEFICIARIA (1 párrafo)
+- Características y número de personas
+- Impacto esperado
+
+8. CRONOGRAMA (tabla o lista de actividades por mes/fase)
+
+9. PRESUPUESTO (si se proporcionó, desglosar en rubros principales)
+
+10. RESULTADOS ESPERADOS (3-5 puntos concretos y medibles)
+
+11. IMPACTO Y SOSTENIBILIDAD (1-2 párrafos)
+- Transformación esperada en la comunidad
+- Cómo se sostendrá después del apoyo
+
+INSTRUCCIONES IMPORTANTES:
+- Usa lenguaje claro, cercano pero profesional
+- Incorpora vocabulario de CVC: "buen vivir", "transformación social", "saberes comunitarios", "memoria viva"
+- Enfatiza la participación comunitaria y el proceso más que solo el resultado
+- Muestra el vínculo con el territorio y la identidad cultural
+- Resalta el impacto transformador
+- Sé específico y concreto, evita generalidades
+- Si falta información, sugiere qué agregar pero completa lo mejor posible
+
+Genera la propuesta en formato markdown limpio y profesional.`;
+
+            try {
+                const response = await fetch("https://api.anthropic.com/v1/messages", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        model: "claude-sonnet-4-20250514",
+                        max_tokens: 4000,
+                        messages: [
+                            { role: "user", content: prompt }
+                        ],
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (data.content && data.content[0] && data.content[0].text) {
+                    const propuestaTexto = data.content[0].text;
+                    
+                    // Convertir markdown a HTML simple
+                    const propuestaHTML = convertirMarkdownAHTML(propuestaTexto);
+                    
+                    document.getElementById('propuestaGenerada').innerHTML = propuestaHTML;
+                    document.getElementById('loading').classList.add('hidden');
+                    document.getElementById('resultado').classList.remove('hidden');
+                    
+                    // Guardar para descargar
+                    window.propuestaFinal = propuestaTexto;
+                } else {
+                    throw new Error('No se pudo generar la propuesta');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Hubo un error al generar la propuesta. Por favor intenta de nuevo.');
+                document.getElementById('loading').classList.add('hidden');
+            }
+            
+            document.getElementById('btnGenerar').disabled = false;
+        }
+
+        function convertirMarkdownAHTML(markdown) {
+            let html = markdown;
+            
+            // Títulos
+            html = html.replace(/^### (.*$)/gim, '<h3 class="text-xl font-bold mt-6 mb-3 text-gray-800">$1</h3>');
+            html = html.replace(/^## (.*$)/gim, '<h2 class="text-2xl font-bold mt-6 mb-4 text-gray-900">$1</h2>');
+            html = html.replace(/^# (.*$)/gim, '<h1 class="text-3xl font-bold mt-6 mb-4 text-gray-900">$1</h1>');
+            
+            // Negritas
+            html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            
+            // Listas
+            html = html.replace(/^\* (.*$)/gim, '<li class="ml-6 mb-1">• $1</li>');
+            html = html.replace(/^- (.*$)/gim, '<li class="ml-6 mb-1">• $1</li>');
+            
+            // Párrafos
+            html = html.replace(/\n\n/g, '</p><p class="mb-4">');
+            html = '<p class="mb-4">' + html + '</p>';
+            
+            return html;
+        }
+
+        function copiarTexto() {
+            const texto = window.propuestaFinal || document.getElementById('propuestaGenerada').innerText;
+            navigator.clipboard.writeText(texto).then(() => {
+                alert('¡Texto copiado al portapapeles!');
+            });
+        }
+
+        function descargarPropuesta() {
+            const formato = document.getElementById('formatoDescarga').value;
+            const texto = window.propuestaFinal || document.getElementById('propuestaGenerada').innerText;
+            
+            if (formato === 'texto') {
+                const blob = new Blob([texto], { type: 'text/plain' });
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `propuesta_${datosFormulario.nombreOrg.replace(/\s+/g, '_')}.txt`;
+                a.click();
+            } else if (formato === 'word') {
+                alert('La descarga en Word estará disponible próximamente. Por ahora, copia el texto y pégalo en Word.');
+            } else if (formato === 'pdf') {
+                alert('La descarga en PDF estará disponible próximamente. Por ahora, copia el texto y pégalo en un procesador de texto.');
+            }
+        }
+    </script>
+</body>
+</html>
